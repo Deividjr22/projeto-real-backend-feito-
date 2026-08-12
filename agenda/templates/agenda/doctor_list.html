@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Find a doctor · MedAgenda{% endblock %}
+{% block content %}
+<div class="page-head">
+  <span class="eyebrow">{{ doctors|length }} available</span>
+  <h1>Book an appointment</h1>
+  <p>Choose a doctor to see available times.</p>
+</div>
+
+<style>
+  .doctor-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .doctor-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .doctor-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 16.5px; }
+  .doctor-specialty {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--teal);
+    margin-top: 3px;
+  }
+  .doctor-bio { color: var(--ink-muted); font-size: 13.5px; margin-top: 6px; max-width: 440px; }
+</style>
+
+<ul class="doctor-list">
+  {% for doctor in doctors %}
+    <li class="doctor-card">
+      <div>
+        <div class="doctor-name">{{ doctor }}</div>
+        <div class="doctor-specialty">{{ doctor.specialty }}</div>
+        {% if doctor.bio %}<div class="doctor-bio">{{ doctor.bio }}</div>{% endif %}
+      </div>
+      <a href="{% url 'agenda:book_appointment' doctor.pk %}" class="btn">Book</a>
+    </li>
+  {% empty %}
+    <li class="empty-state">
+      <span class="eyebrow" style="color: var(--slate);">No doctors yet</span>
+      Check back soon.
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

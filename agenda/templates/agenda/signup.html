@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Sign up · MedAgenda{% endblock %}
+{% block content %}
+<div class="page-head">
+  <span class="eyebrow">New patient</span>
+  <h1>Create your account</h1>
+  <p>Register to book, reschedule, or cancel your own appointments.</p>
+</div>
+
+<div class="card" style="max-width: 440px;">
+  {% if form.errors %}
+    <ul class="messages">
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li style="background: var(--rose-soft); color: var(--rose); border-left-color: var(--rose);">
+            {{ field.label }}: {{ error }}
+          </li>
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+        <li style="background: var(--rose-soft); color: var(--rose); border-left-color: var(--rose);">{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      <label for="{{ form.username.id_for_label }}">Username</label>
+      {{ form.username }}
+    </p>
+    <div style="display: flex; gap: 12px;">
+      <p style="flex: 1;">
+        <label for="{{ form.first_name.id_for_label }}">First name</label>
+        {{ form.first_name }}
+      </p>
+      <p style="flex: 1;">
+        <label for="{{ form.last_name.id_for_label }}">Last name</label>
+        {{ form.last_name }}
+      </p>
+    </div>
+    <p>
+      <label for="{{ form.email.id_for_label }}">Email</label>
+      {{ form.email }}
+    </p>
+    <p>
+      <label for="{{ form.phone.id_for_label }}">Phone (optional)</label>
+      {{ form.phone }}
+    </p>
+    <p>
+      <label for="{{ form.password1.id_for_label }}">Password</label>
+      {{ form.password1 }}
+    </p>
+    <p>
+      <label for="{{ form.password2.id_for_label }}">Confirm password</label>
+      {{ form.password2 }}
+    </p>
+    <button type="submit" class="btn">Create account</button>
+  </form>
+</div>
+
+<p style="margin-top: 16px; font-size: 13.5px; color: var(--ink-muted);">
+  Already have an account? <a href="{% url 'login' %}">Log in</a>
+</p>
+{% endblock %}

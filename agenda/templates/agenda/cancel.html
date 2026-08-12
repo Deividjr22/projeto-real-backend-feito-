@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Cancel appointment · MedAgenda{% endblock %}
+{% block content %}
+<div class="page-head">
+  <span class="eyebrow" style="color: var(--rose);">Cancelling appointment</span>
+  <h1>Cancel this appointment?</h1>
+  <p>This can't be undone. Let us know why, if you'd like — it helps your clinic plan ahead.</p>
+</div>
+
+<div class="card" style="max-width: 420px;">
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      <label for="{{ form.reason.id_for_label }}">Reason (optional)</label>
+      {{ form.reason }}
+    </p>
+    <button type="submit" class="btn danger">Confirm cancellation</button>
+    <a href="{% url 'agenda:my_appointments' %}" class="btn-ghost">Keep appointment</a>
+  </form>
+</div>
+{% endblock %}

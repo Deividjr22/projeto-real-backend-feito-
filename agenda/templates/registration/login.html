@@ -1,9 +1,36 @@
 {% extends "base.html" %}
+{% block title %}Log in · MedAgenda{% endblock %}
 {% block content %}
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Log in</button>
-</form>
+<div class="page-head">
+  <span class="eyebrow">Patient portal</span>
+  <h1>Log in</h1>
+  <p>Enter your credentials to view or manage your appointments.</p>
+</div>
+
+<div class="card" style="max-width: 380px;">
+  {% if form.errors %}
+    <ul class="messages">
+      <li style="background: var(--rose-soft); color: var(--rose); border-left-color: var(--rose);">
+        Your username and password didn't match. Try again.
+      </li>
+    </ul>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      <label for="id_username">Username</label>
+      {{ form.username }}
+    </p>
+    <p>
+      <label for="id_password">Password</label>
+      {{ form.password }}
+    </p>
+    <button type="submit" class="btn">Log in</button>
+    <input type="hidden" name="next" value="{{ next }}">
+  </form>
+
+  <p style="margin-top: 16px; font-size: 13.5px; color: var(--ink-muted);">
+    New patient? <a href="{% url 'agenda:signup' %}">Create an account</a>
+  </p>
+</div>
 {% endblock %}
