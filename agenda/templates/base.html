@@ -1,7 +1,236 @@
 <!DOCTYPE html>
-<html>
-<head><title>MedAgenda</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MedAgenda{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F9F8;
+      --surface: #FFFFFF;
+      --ink: #1C2B33;
+      --ink-muted: #64767C;
+      --border: #DCE3E1;
+      --teal: #2F6F5E;
+      --teal-soft: #E4EFEC;
+      --amber: #C99A3C;
+      --amber-soft: #FBF3E3;
+      --rose: #C1584A;
+      --rose-soft: #FAEAE7;
+      --slate: #8B98A0;
+      --slate-soft: #EEF1F2;
+      --radius: 3px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 0 0 4px 0;
+    }
+
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .topbar .brand {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .topbar .brand .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      display: inline-block;
+      margin-right: 2px;
+    }
+
+    .topbar nav a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .topbar nav a:hover { color: var(--teal); text-decoration: none; }
+
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .page-head {
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--teal);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .page-head p { color: var(--ink-muted); margin: 4px 0 0; }
+
+    /* Messages */
+    .messages { list-style: none; padding: 0; margin: 0 0 24px; }
+    .messages li {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      border-left: 3px solid var(--teal);
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      border-radius: var(--radius);
+    }
+
+    /* Forms */
+    form p { margin: 0 0 18px; }
+    label {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+    }
+    input, textarea, select {
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--teal);
+    }
+    textarea { min-height: 90px; resize: vertical; }
+
+    .btn {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 11px 20px;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--teal); text-decoration: none; }
+    .btn.danger { background: var(--rose); }
+    .btn.danger:hover { background: #A6493D; }
+    .btn-ghost {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 9px 16px;
+      margin-left: 8px;
+    }
+    .btn-ghost:hover { border-color: var(--ink-muted); color: var(--ink); text-decoration: none; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    footer.foot {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+      color: var(--slate);
+    }
+
+    .logout-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.logout-btn:hover { color: var(--teal); text-decoration: underline; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
 <body>
-{% block content %}{% endblock %}
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span>MedAgenda</div>
+        <nav>
+      {% if user.is_authenticated %}
+            <a href="{% url 'agenda:dashboard' %}">Appointments</a>
+         &nbsp;&nbsp;
+           <form method="post" action="{% url 'logout' %}" style="display: inline;">
+  {% csrf_token %}
+  <button type="submit" class="logout-btn">Log out</button>
+</form>
+        {% else %}
+             <a href="{% url 'login' %}">Log in</a>
+         {% endif %}
+        </nav>
+     </div>
+
+  <div class="wrap">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer class="foot">MEDAGENDA · PATIENT PORTAL</footer>
 </body>
 </html>

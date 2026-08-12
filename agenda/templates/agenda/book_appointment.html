@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Book with {{ doctor }} · MedAgenda{% endblock %}
+{% block content %}
+<div class="page-head">
+  <span class="eyebrow">New appointment</span>
+  <h1>Book with {{ doctor }}</h1>
+  <p>{{ doctor.specialty }}{% if doctor.bio %} — {{ doctor.bio }}{% endif %}</p>
+</div>
+
+<div class="card" style="max-width: 440px;">
+  {% if form.start_time.errors %}
+    <ul class="messages">
+      {% for error in form.start_time.errors %}
+        <li style="background: var(--rose-soft); color: var(--rose); border-left-color: var(--rose);">{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      <label for="{{ form.start_time.id_for_label }}">Date &amp; time</label>
+      {{ form.start_time }}
+    </p>
+    <p>
+      <label for="{{ form.reason.id_for_label }}">Reason for visit</label>
+      {{ form.reason }}
+    </p>
+    <button type="submit" class="btn">Confirm booking</button>
+    <a href="{% url 'agenda:doctor_list' %}" class="btn-ghost">Back</a>
+  </form>
+</div>
+{% endblock %}

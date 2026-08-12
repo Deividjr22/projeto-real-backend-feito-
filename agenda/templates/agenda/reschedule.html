@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Reschedule · MedAgenda{% endblock %}
+{% block content %}
+<div class="page-head">
+  <span class="eyebrow">Editing appointment</span>
+  <h1>Reschedule</h1>
+  <p>Choose a new date and time. Your doctor's availability will be checked automatically.</p>
+</div>
+
+<div class="card" style="max-width: 420px;">
+  {% if form.non_field_errors or form.start_time.errors %}
+    <ul class="messages">
+      {% for error in form.start_time.errors %}
+        <li style="background: var(--rose-soft); color: var(--rose); border-left-color: var(--rose);">{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      <label for="{{ form.start_time.id_for_label }}">New date &amp; time</label>
+      {{ form.start_time }}
+    </p>
+    <button type="submit" class="btn">Confirm new time</button>
+    <a href="{% url 'agenda:my_appointments' %}" class="btn-ghost">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,17 +1,105 @@
 {% extends "base.html" %}
+{% block title %}My Appointments · MedAgenda{% endblock %}
 {% block content %}
-<h1>My Appointments</h1>
-<ul>
+<div class="page-head">
+  <span class="eyebrow">{{ appointments|length }} on record</span>
+  <h1>My appointments</h1>
+  <p>Reschedule or cancel up to 24 hours before your visit.</p>
+  <div style="margin-top: 14px;">
+    <a href="{% url 'agenda:doctor_list' %}" class="btn">Book new appointment</a>
+  </div>
+</div>
+
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+  </ul>
+{% endif %}
+
+<style>
+  .appt-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .appt-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    overflow: hidden;
+  }
+  .appt-card::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: var(--tab-color, var(--slate));
+  }
+  .appt-card.status-scheduled, .appt-card.status-rescheduled { --tab-color: var(--teal); }
+  .appt-card.status-cancelled { --tab-color: var(--rose); }
+  .appt-card.status-completed { --tab-color: var(--slate); }
+
+  .appt-main { display: flex; flex-direction: column; gap: 3px; }
+  .appt-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+  .appt-doctor { font-size: 14px; color: var(--ink-muted); }
+  .appt-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .status-scheduled .appt-status, .status-rescheduled .appt-status {
+    background: var(--teal-soft); color: var(--teal);
+  }
+  .status-cancelled .appt-status { background: var(--rose-soft); color: var(--rose); }
+  .status-completed .appt-status { background: var(--slate-soft); color: var(--ink-muted); }
+
+  .appt-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .appt-actions a { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+
+  .appt-row { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 16px; }
+
+  .empty-state {
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--ink-muted);
+  }
+  .empty-state .eyebrow { color: var(--slate); }
+</style>
+
+<ul class="appt-list">
   {% for appt in appointments %}
-    <li>
-      {{ appt.start_time }} — {{ appt.doctor }} ({{ appt.get_status_display }})
+    <li class="appt-card status-{{ appt.status }}">
+      <div class="appt-row">
+        <div class="appt-main">
+          <span class="appt-time">{{ appt.start_time|date:"D, M j Y — H:i" }}</span>
+          <span class="appt-doctor">{{ appt.doctor }}</span>
+        </div>
+        <span class="appt-status">{{ appt.get_status_display }}</span>
+      </div>
       {% if appt.can_be_modified %}
-        <a href="{% url 'agenda:reschedule' appt.pk %}">Reschedule</a>
-        <a href="{% url 'agenda:cancel' appt.pk %}">Cancel</a>
+        <div class="appt-actions">
+          <a href="{% url 'agenda:reschedule' appt.pk %}">Reschedule</a>
+          <a href="{% url 'agenda:cancel' appt.pk %}" style="color: var(--rose);">Cancel</a>
+        </div>
       {% endif %}
     </li>
   {% empty %}
-    <li>No appointments yet.</li>
+    <li class="empty-state">
+      <span class="eyebrow">Nothing scheduled</span>
+      You have no appointments on file yet.
+    </li>
   {% endfor %}
 </ul>
 {% endblock %}

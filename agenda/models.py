@@ -1,7 +1,11 @@
+from datetime import timedelta
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+
+APPOINTMENT_DURATION = timedelta(minutes=30)
 
 
 class User(AbstractUser):
@@ -67,7 +71,7 @@ class Appointment(models.Model):
 
 class AppointmentHistory(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name="history")
-    action = models.CharField(max_length=20)  # "rescheduled", "cancelled"
+    action = models.CharField(max_length=20)  # "booked", "rescheduled", "cancelled", "completed"
     old_start_time = models.DateTimeField(null=True, blank=True)
     new_start_time = models.DateTimeField(null=True, blank=True)
     changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
